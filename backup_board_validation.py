@@ -120,12 +120,13 @@ def main() -> None:
     # filename = input("File name for initial configuration: ")
     try:
         board_validation = False
+        print("Testing")
         while board_validation == False:
             filename = input("File name for initial configuration: ")  
             # filename="board_examp.txt"
             file = open(filename)
             file_content = file.readlines()
-            # print("Hello World")
+            print("Hello World")
             if (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
                 board_validation = False
                 print("Dimentions are not correct")
@@ -142,20 +143,20 @@ def main() -> None:
             for index in range(1, len(alphabets)+1):
                 alphabets_weights[alphabets[index-1]] = index 
 
-            # print(alphabets_weights)
+            print(alphabets_weights)
             
             white_pieces = file_content[1].split(",")
 
             bool_pool = []
             for white_piece in white_pieces:
-                # print(white_piece)
+                print(white_piece)
                 if (alphabets_weights[white_piece.strip()[1]] > 0) and (alphabets_weights[white_piece.strip()[1]] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
                     # pass
-                    # print("In White Piece")
+                    print("In White Piece")
                     board_validation = True
                     
                 else:
-                    print("The file is not valid: \nPlease re-enter the valid file name\n")
+                    print("The file is not valid: white")
                     # board_validation = False
                     bool_pool.append(False)
                     break
@@ -169,7 +170,7 @@ def main() -> None:
                     # print("In Black Piece")
                     board_validation = True
                 else:
-                    print("The file is not valid: \nPlease re-enter the valid file name\n") 
+                    # print("The file is not valid: black") 
                     # board_validation = False
                     bool_pool.append(False)
                     break
@@ -179,7 +180,7 @@ def main() -> None:
 
 
             file.close()
-        print("File is valid")
+        # print("Ending")
     except FileNotFoundError:
         print("The file does not exist.")
 

@@ -7,14 +7,14 @@ This coursework takes inspiration from chess, although it has significant differ
 
 White starts the game, after which Black and White alternate by moving one of own pieces according to the usual chess rules, that are:
 
-- *[Rule1]* A bishop can move any number of squares diagonally, but cannot leap over other pieces.
-- *[Rule2]* The king moves one square in any direction, including diagonal, on the board. 
+- *[Rule1]*v A bishop can move any number of squares diagonally, but cannot leap over other pieces.
+- *[Rule2]* The king moes one square in any direction, including diagonal, on the board. 
 
 As usual, as a result of any move, the piece that is moved either occupies a previously empty board location, or captures the other side's piece. In that case, the former piece occupies the latter's position, while the latter piece is removed from the board. Clearly, we have the following:
 
-- *[Rule3]* A piece of side X (Black or White) cannot move to a location occupied by a piece of side X.
+- *[Rule3]* A piece of side X (Black or White) cannot move to a location occupied by a piece of side X
 
-**Check** for side X is a configuration of the board when X's king can be captured by a piece of the other side Y (in one move). Another chess rule we obey is:
+**Check** for side X is a configuration of the board when X's king can be captured by a piece of the other side Y (in one move). Another chess rule we obey is:.
 
 - *[Rule4]* A piece of side X cannot make a move, if the configuration resulting from this move is a check for X. 
 
