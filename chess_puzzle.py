@@ -1,6 +1,18 @@
 def location2index(loc: str) -> tuple[int, int]:
     '''converts chess location to corresponding x and y coordinates'''
-    
+   
+    column =  loc.strip()[1]
+
+    alphabets_weights = {} #empty dictionary
+
+    alphabets = 'abcdefghijklmnopqrstuvwxyz'
+
+    for index in range(1, len(alphabets)+1):
+        alphabets_weights[alphabets[index-1]] = index
+
+    column_value = alphabets_weights[column]
+    return (column_value, int(loc.strip()[2]))
+
 	
 def index2location(x: int, y: int) -> str:
     '''converts  pair of coordinates to corresponding location'''
@@ -120,12 +132,12 @@ def main() -> None:
     # filename = input("File name for initial configuration: ")
     try:
         board_validation = False
+        # print("Testing")
         while board_validation == False:
             filename = input("File name for initial configuration: ")  
             # filename="board_examp.txt"
             file = open(filename)
             file_content = file.readlines()
-            # print("Hello World")
             if (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
                 board_validation = False
                 print("Dimentions are not correct")
@@ -134,28 +146,21 @@ def main() -> None:
             # while (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
             #     file_content[0] = int(input("Enter the number again"))
             
-
-            alphabets_weights = {} #empty dictionary
-
-            alphabets = 'abcdefghijklmnopqrstuvwxyz'
-
-            for index in range(1, len(alphabets)+1):
-                alphabets_weights[alphabets[index-1]] = index 
-
-            # print(alphabets_weights)
-            
             white_pieces = file_content[1].split(",")
 
             bool_pool = []
             for white_piece in white_pieces:
                 # print(white_piece)
-                if (alphabets_weights[white_piece.strip()[1]] > 0) and (alphabets_weights[white_piece.strip()[1]] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
+                loc2index = location2index(white_piece)
+
+                # if (alphabets_weights[white_piece.strip()[1]] > 0) and (alphabets_weights[white_piece.strip()[1]] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
+                if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
                     # pass
-                    # print("In White Piece")
+                    print("In White Piece")
                     board_validation = True
                     
                 else:
-                    print("The file is not valid: \nPlease re-enter the valid file name\n")
+                    print("The file is not valid: white")
                     # board_validation = False
                     bool_pool.append(False)
                     break
@@ -164,22 +169,25 @@ def main() -> None:
 
             for black_piece in black_pieces:
                 # print(black_piece)
-                if (alphabets_weights[black_piece.strip()[1]] > 0) and (alphabets_weights[black_piece.strip()[1]] <= int(file_content[0])) and (int(black_piece.strip()[2:]) <= int(file_content[0])):
+
+                loc2index = location2index(black_piece)
+
+                if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(black_piece.strip()[2:]) <= int(file_content[0])):
                     # pass
-                    # print("In Black Piece")
+                    print("In Black Piece")
                     board_validation = True
                 else:
-                    print("The file is not valid: \nPlease re-enter the valid file name\n") 
+                    # print("The file is not valid: black") 
                     # board_validation = False
                     bool_pool.append(False)
                     break
             if False in bool_pool:
                 board_validation = False
-        
-
+            elif board_validation == True:
+                print("File is valid")
 
             file.close()
-        print("File is valid")
+        # print("Ending")
     except FileNotFoundError:
         print("The file does not exist.")
 
