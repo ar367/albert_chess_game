@@ -16,6 +16,20 @@ def location2index(loc: str) -> tuple[int, int]:
 	
 def index2location(x: int, y: int) -> str:
     '''converts  pair of coordinates to corresponding location'''
+   
+    for list in board:
+        print(list, "\n")
+        for piece_ in list:
+            
+            if piece_ == None:
+                continue
+            a, b = piece_[0]
+            a = int(a)
+            b = int(b)
+            print(a,b)
+            if (a, b) == (x, y):
+                return piece_[1].strip()
+           
 
 class Piece:
     pos_x : int	
@@ -128,20 +142,23 @@ def conf2unicode(B: Board) -> str:
 
 
 def main() -> None:
-   
     # filename = input("File name for initial configuration: ")
     try:
+        global piece
+        piece = []
         board_validation = False
         # print("Testing")
         while board_validation == False:
             filename = input("File name for initial configuration: ")  
             # filename="board_examp.txt"
             file = open(filename)
+            global file_content
             file_content = file.readlines()
             if (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
                 board_validation = False
                 print("Dimentions are not correct")
                 continue
+
             
             # while (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
             #     file_content[0] = int(input("Enter the number again"))
@@ -152,11 +169,12 @@ def main() -> None:
             for white_piece in white_pieces:
                 # print(white_piece)
                 loc2index = location2index(white_piece)
+                piece.append([loc2index, white_piece, "white"])
 
                 # if (alphabets_weights[white_piece.strip()[1]] > 0) and (alphabets_weights[white_piece.strip()[1]] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
                 if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
                     # pass
-                    print("In White Piece")
+                    # print("In White Piece")
                     board_validation = True
                     
                 else:
@@ -171,10 +189,11 @@ def main() -> None:
                 # print(black_piece)
 
                 loc2index = location2index(black_piece)
+                piece.append([loc2index, black_piece, "black"])
 
                 if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(black_piece.strip()[2:]) <= int(file_content[0])):
                     # pass
-                    print("In Black Piece")
+                    # print("In Black Piece")
                     board_validation = True
                 else:
                     # print("The file is not valid: black") 
@@ -190,8 +209,44 @@ def main() -> None:
         # print("Ending")
     except FileNotFoundError:
         print("The file does not exist.")
+    
+    print(piece) 
+    global board
+    board = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
+    # print("Length of board: ", len(board[1]))
+    for i in range(int(file_content[0]),0,-1):
+        for j in range(1, int(file_content[0])+1):
 
-     
+            row_5 = 0
+            row_4 = 1
+            row_3 = 2
+            row_2 = 3
+            row_1 = 4
+
+            rows = [5-1, 4-1, 3-1, 2-1, 1-1]
+
+            col_1 = 0
+            col_2 = 1
+            col_3 = 2
+            col_4 = 3
+            col_5 = 4
+
+            cols = [1-1, 2-1, 3-1, 4-1, 5-1]
+
+            for k in piece:
+                if k[0] == (j,i):
+                    # print("Hello World", j, i)
+                    board[rows[i-1]][cols[j-1]] = k
+    # print(board[0])
+    # for list in board:
+    #     print(list)
+    index2loc = index2location(3, 1)
+
+    print(index2loc)
+    
+
+
+
 
 if __name__ == '__main__': #keep this in
    main()
