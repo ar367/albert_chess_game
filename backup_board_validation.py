@@ -37,19 +37,39 @@ class Piece:
     side : bool #True for White and False for Black
     def __init__(self, pos_X : int, pos_Y : int, side_ : bool):
         '''sets initial values'''
+        self.pos_X = pos_X
+        self.pos_Y = pos_Y
+        self.side_ = side_
 
 
 Board = tuple[int, list[Piece]]
 
 
 def is_piece_at(pos_X : int, pos_Y : int, B: Board) -> bool:
-    '''checks if there is piece at coordinates pox_X, pos_Y of board B''' 
+    board_pieces = B[1]
+    for piece_ in board_pieces:
+        if piece_[0] == pos_X and piece_[1] == pos_Y:
+            return True
+        else:
+            return False
+
 	
 def piece_at(pos_X : int, pos_Y : int, B: Board) -> Piece:
     '''
     returns the piece at coordinates pox_X, pos_Y of board B 
     assumes some piece at coordinates pox_X, pos_Y of board B is present
     '''
+    board_pieces =  B[1]
+    check_list = []
+
+    for piece_ in board_pieces:
+        if piece_[0] == pos_X and piece_[1] == pos_Y:
+            check_list.append(piece_)
+    if check_list != None:
+        return check_list[0]
+    else:
+        return None
+    
 
 class Bishop(Piece):
     def __init__(self, pos_X : int, pos_Y : int, side_ : bool):
@@ -145,11 +165,12 @@ def main() -> None:
     # filename = input("File name for initial configuration: ")
     try:
         global piece
+        pieces = []
         piece = []
         board_validation = False
         # print("Testing")
         while board_validation == False:
-            filename = input("File name for initial configuration: ")  
+            filename = input("File name for initial configuration: ")   
             # filename="board_examp.txt"
             file = open(filename)
             global file_content
@@ -169,6 +190,10 @@ def main() -> None:
             for white_piece in white_pieces:
                 # print(white_piece)
                 loc2index = location2index(white_piece)
+
+                piece_class = Piece(int(loc2index[0]), int(loc2index[1]), 1)
+                pieces.append([piece_class.pos_X, piece_class.pos_Y, piece_class.side_])
+
                 piece.append([loc2index, white_piece, "white"])
 
                 # if (alphabets_weights[white_piece.strip()[1]] > 0) and (alphabets_weights[white_piece.strip()[1]] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
@@ -189,6 +214,10 @@ def main() -> None:
                 # print(black_piece)
 
                 loc2index = location2index(black_piece)
+
+                piece_class = Piece(int(loc2index[0]), int(loc2index[1]), 0)
+                pieces.append([piece_class.pos_X, piece_class.pos_Y, piece_class.side_])
+
                 piece.append([loc2index, black_piece, "black"])
 
                 if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(black_piece.strip()[2:]) <= int(file_content[0])):
@@ -210,7 +239,7 @@ def main() -> None:
     except FileNotFoundError:
         print("The file does not exist.")
     
-    print(piece) 
+    print(pieces) 
     global board
     board = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
     # print("Length of board: ", len(board[1]))
@@ -243,6 +272,21 @@ def main() -> None:
     index2loc = index2location(3, 1)
 
     print(index2loc)
+
+    Bo = (5, pieces)
+    print(Bo)
+
+    print('\n Board', board)
+
+    print("\n")
+
+    is_piece_at_ = is_piece_at(2 , 5, Bo)
+    print(is_piece_at_)
+
+
+    print("\n")
+    piece_at_ = piece_at(5 ,3, Bo)
+    print(piece_at_)
     
 
 
