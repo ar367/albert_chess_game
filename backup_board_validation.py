@@ -388,24 +388,36 @@ def main() -> None:
     
 
     legal_moves = {}
-    print(all_board_coordinates)
+    # print(all_board_coordinates)
+
+    for k in piece:
+        legal_moves[k[1].strip()] = []
+
     for list_of_coordinates in all_board_coordinates:
         for coordinates in list_of_coordinates:
             print(coordinates)
             for k in piece:
                 if k[1].strip()[0] == 'B':
-                    # print(k[1].strip())
-                    print(k)
                     pass
-                    # print("Bishop")
-                    # print(k[1].strip())
-                    # one = coordinates[0][1]
-                    # print(one)
+                    
                     is_piece_at_ = is_piece_at( k[0][0], k[0][1], Bo)
-                    if is_piece_at_ == True:
-                        pass
-                        print(is_piece_at_, (coordinates[0], coordinates[1]))
-                    # piece_at_ = piece_at(j, i, Bo)
+                    piece_at_ = piece_at(k[0][0], k[0][1], Bo)
+
+                    # bishop_piece = Piece(k[0][0], k[0][1], piece_at_[2])
+                    bishop = Bishop(k[0][0], k[0][1], piece_at_[2])
+                    print("bishop.initial_position_x_bishop", bishop.initial_position_x_bishop)
+
+                    if (piece_at_[0], piece_at_[1]) == coordinates:
+
+                    # if is_piece_at_ == True:
+                        
+                        list_to_append = [(coordinates[0], coordinates[1]), piece_at_[2]]
+                        legal_moves[k[1].strip()] += [list_to_append]
+                    else:
+                        list_to_append = (coordinates[0], coordinates[1]), None
+                        legal_moves[k[1].strip()] += [list_to_append]
+
+                    # print(piece_at_)
 
                         
 
@@ -413,7 +425,12 @@ def main() -> None:
                     # print("King")
                     pass
                 
-                # all_board_coordinates[rows[i-1]][cols[j-1]] = (j,i)
+    print(legal_moves)
+    # for key, values in legal_moves.items():
+    #     if key == "Bb5":
+    #         print(values)
+
+
 
     
     
