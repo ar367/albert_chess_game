@@ -57,7 +57,7 @@ def is_piece_at(pos_X : int, pos_Y : int, B: Board) -> bool:
         return True
     else:
         return False
-
+    
 	
 def piece_at(pos_X : int, pos_Y : int, B: Board) -> Piece:
     '''
@@ -65,17 +65,22 @@ def piece_at(pos_X : int, pos_Y : int, B: Board) -> Piece:
     assumes some piece at coordinates pox_X, pos_Y of board B is present
     '''
     board_pieces =  B[1]
-    check_list = []
+    check_list_ = []
     
     for piece_ in board_pieces:
         
         
         if piece_[0] == pos_X and piece_[1] == pos_Y:
-            check_list.append(piece_)
-    if check_list != None:
-        return check_list[0]
-    else:
+            check_list_.append(piece_)
+        else:
+            continue
+    
+    if check_list_ == []:
         return None
+    elif check_list_ != None:
+        return check_list_[0]
+    
+
     
 
 class Bishop(Piece):
@@ -98,11 +103,25 @@ class Bishop(Piece):
         bishop_movement_condition = abs(self.initial_position_x_bishop - updated_position_x_bishop) == abs(self.initial_position_y_bishop - updated_position_y_bishop)
 
         if bishop_movement_condition:
+            can_reach_side_bool = []
             for piece_ in B[1]:
-                if piece_[2] != self.side_:
-                    return True
+                if updated_position_x_bishop == piece_[0] and updated_position_y_bishop == piece_[1]:
+                    can_reach_side_bool.append(piece_[2])
+                    
+                # else:
+                #     # print("we are here")
+                #     return "Hello"
+            if can_reach_side_bool != []:
+
+                if self.side_ == can_reach_side_bool[0]:
+                    return (False, "side is same")
                 else: 
-                    return False
+                    return True
+            else:
+                return "can_reach_side_bool is empty"
+        
+        else: 
+            return False
 
 
     def can_move_to(self, pos_X : int, pos_Y : int, B: Board) -> bool:
@@ -131,7 +150,7 @@ class King(Piece):
         '''sets initial values by calling the constructor of Piece'''
         self.initial_position_x_king = pos_X
         self.initial_position_y_king = pos_Y
-        self.king_side_ = side_
+        self.side_ = side_
 
         
 
@@ -161,15 +180,43 @@ class King(Piece):
         one = 1
 
         valid_move = abs_diff_up_x_from_init_x <= one and  abs_diff_up_y_from_init_y <= one and comp_btw_init_and_up_attr_king
-        
+        # print("B1", B[1])
         if valid_move:
+            # for piece_ in B[1]:
+            #         if piece_[2] != self.side_:
+            #             return True
+            #         else:
+            #             return False
+                    
+                    
+            can_reach_side_bool_king = []
             for piece_ in B[1]:
-                    if piece_[2] != self.side_:
-                        return True
-                    else:
-                        return False
+                if updated_position_x_king == piece_[0] and updated_position_y_king == piece_[1]:
+                    can_reach_side_bool_king.append(piece_[2])
+                    
+                # else:
+                #     # print("we are here")
+                #     return "Hello"
+            if can_reach_side_bool_king != []:
+
+                if self.side_ == can_reach_side_bool_king[0]:
+                    return (False, "side is same")
+                else: 
+                    return True
+            else:
+                return "can_reach_side_bool is empty"
+            
+
+        else:
+            return False
+                    
+    
+
+
     def can_move_to(self, pos_X : int, pos_Y : int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
+
+        return 
     def move_to(self, pos_X : int, pos_Y : int, B: Board) -> Board:
         '''
         returns new board resulting from move of this king to coordinates pos_X, pos_Y on board B 
@@ -207,7 +254,7 @@ class King(Piece):
 def is_check(side: bool, B: Board) -> bool:
     '''
     checks if configuration of B is check for side
-    Hint: use can_reach
+    Hint: use can_reach-
     '''
 
 def is_checkmate(side: bool, B: Board) -> bool:
@@ -370,7 +417,6 @@ def main() -> None:
 
     # print(index2loc)
 
-  
     Bo = (5, pieces)
     # print(Bo)
 
@@ -386,47 +432,89 @@ def main() -> None:
     # piece_at_ = piece_at(5 ,3, Bo)
     # print(piece_at_)
     
-
-    legal_moves = {}
-    # print(all_board_coordinates)
+    #----------------------------------------------------------------------------------------------------
+    
+    general_moves = {}
 
     for k in piece:
-        legal_moves[k[1].strip()] = []
+        general_moves[k[1].strip()] = []
 
     for list_of_coordinates in all_board_coordinates:
         for coordinates in list_of_coordinates:
-            print(coordinates)
+            # print(coordinates)
+            # print(piece)
             for k in piece:
                 if k[1].strip()[0] == 'B':
                     pass
                     
                     is_piece_at_ = is_piece_at( k[0][0], k[0][1], Bo)
                     piece_at_ = piece_at(k[0][0], k[0][1], Bo)
+                    piece_at_other_cord = piece_at(coordinates[0], coordinates[1], Bo)
 
-                    # bishop_piece = Piece(k[0][0], k[0][1], piece_at_[2])
                     bishop = Bishop(k[0][0], k[0][1], piece_at_[2])
-                    print("bishop.initial_position_x_bishop", bishop.initial_position_x_bishop)
 
-                    if (piece_at_[0], piece_at_[1]) == coordinates:
+                    can_reach_ = bishop.can_reach(coordinates[0], coordinates[1], Bo)
 
-                    # if is_piece_at_ == True:
-                        
-                        list_to_append = [(coordinates[0], coordinates[1]), piece_at_[2]]
-                        legal_moves[k[1].strip()] += [list_to_append]
+                    if piece_at_other_cord == None:
+                        if can_reach_:
+                            list_to_append = (coordinates[0], coordinates[1]), None
+                            general_moves[k[1].strip()] += [list_to_append]
                     else:
-                        list_to_append = (coordinates[0], coordinates[1]), None
-                        legal_moves[k[1].strip()] += [list_to_append]
+                        if piece_at_[2]  == piece_at_other_cord[2]:
+                            pass
+                        else: 
+                            if can_reach_:
+                                list_to_append = [(coordinates[0], coordinates[1]), piece_at_[2]]
+                                general_moves[k[1].strip()] += [list_to_append]
 
-                    # print(piece_at_)
+                    # print("bishop.can_reach: ",can_reach_)
+
+                    # if (piece_at_[0], piece_at_[1]) == coordinates:
 
                         
+                    #     if can_reach_:
 
-                if k[1].strip()[0][0] == 'K':
-                    # print("King")
+                    #         list_to_append = [(coordinates[0], coordinates[1]), piece_at_[2]]
+                    #         general_moves[k[1].strip()] += [list_to_append]
+                    # else:
+
+                    #     if can_reach_:
+                    #         list_to_append = (coordinates[0], coordinates[1]), None
+                    #         general_moves[k[1].strip()] += [list_to_append]
+
+                if k[1].strip()[0] == 'K':
                     pass
+                    is_piece_at_ = is_piece_at( k[0][0], k[0][1], Bo)
+                    piece_at_ = piece_at(k[0][0], k[0][1], Bo)
+                    piece_at_other_cord = piece_at(coordinates[0], coordinates[1], Bo)
+
+                    king = King(k[0][0], k[0][1], piece_at_[2])
+
+                    can_reach_ = king.can_reach(coordinates[0], coordinates[1], Bo)
+
+                    if piece_at_other_cord == None:
+                        if can_reach_:
+                            list_to_append = (coordinates[0], coordinates[1]), None
+                            general_moves[k[1].strip()] += [list_to_append]
+                    else:
+                        if piece_at_[2]  == piece_at_other_cord[2]:
+                            pass
+                        else: 
+                            if can_reach_:
+                                list_to_append = [(coordinates[0], coordinates[1]), piece_at_[2]]
+                                general_moves[k[1].strip()] += [list_to_append]
+
+
+    print(general_moves)
+
+    # bishop = Bishop(4, 4, piece_at_[2])
+    
+    
+    # can_reach_ = bishop.can_reach(3, 5, Bo)
+    # print("bishop.can_reach: ",can_reach_)
                 
-    print(legal_moves)
-    # for key, values in legal_moves.items():
+    
+    # for key, values in general_moves.items():
     #     if key == "Bb5":
     #         print(values)
 
