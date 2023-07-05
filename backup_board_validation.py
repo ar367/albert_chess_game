@@ -251,11 +251,17 @@ class King(Piece):
         else:
             print("NO")
 
-def is_check(side: bool, B: Board) -> bool:
+def is_check(side: bool, B: Board) ->bool: 
     '''
     checks if configuration of B is check for side
     Hint: use can_reach-
     '''
+    if side == 1:
+        print(in_check_excluded_coordinates[0])
+        return True
+    elif side == 0:
+        print(in_check_excluded_coordinates[1])
+        return True
 
 def is_checkmate(side: bool, B: Board) -> bool:
     '''
@@ -265,6 +271,7 @@ def is_checkmate(side: bool, B: Board) -> bool:
     - use is_check
     - use can_move_to
     '''
+    
 
 def is_stalemate(side: bool, B: Board) -> bool:
     '''
@@ -297,6 +304,46 @@ def find_black_move(B: Board) -> tuple[Piece, int, int]:
 
 def conf2unicode(B: Board) -> str: 
     '''converts board cofiguration B to unicode format string (see section Unicode board configurations)'''
+    pieces = B[1]
+
+    board_configuration_2_unicode = ""
+    
+    for piece in pieces:
+
+        index2loc = index2location(piece[0], piece[1])
+        bishop_or_king = index2loc[0]
+
+        piece_at_ = piece_at(piece[0], piece[1], B)
+        bishop_or_king_side = piece_at_[2]
+
+        if bishop_or_king == "K" and bishop_or_king_side == 1:
+            white_king = "\u2654","\u2001",f"{piece[0]},{piece[1]}", "#"
+            white_king = "".join(white_king)
+            board_configuration_2_unicode += white_king
+            # print("\u2654", "\u2001", f"{piece[0]}, {piece[1]}")
+        elif bishop_or_king == "K" and bishop_or_king_side == 0:
+            black_king = "\u265A","\u2001",f"{piece[0]},{piece[1]}", "#"
+            black_king = "".join(black_king)
+            board_configuration_2_unicode += black_king
+            # print("\u265A", "\u2001", f"{piece[0]}, {piece[1]}")
+        elif bishop_or_king == "B" and bishop_or_king_side == 1:
+            white_bishop = "\u2001","\u2657","\u2001",f"{piece[0]},{piece[1]}", "#"
+            white_bishop = "".join(white_bishop)
+            board_configuration_2_unicode += white_bishop
+            # print("\u2657", "\u2001", f"{piece[0]}, {piece[1]}")
+        elif bishop_or_king == "B" and bishop_or_king_side == 0:
+            black_bishop = "\u2001","\u265D","\u2001",f"{piece[0]},{piece[1]}","#"
+            black_bishop = "".join(black_bishop)
+            board_configuration_2_unicode += black_bishop
+            # print("\u265D", "\u2001", f"{piece[0]}, {piece[1]}")
+
+    for every_sis_spaces in board_configuration_2_unicode:
+        pass
+
+
+    return board_configuration_2_unicode
+
+
 
 
 def main() -> None:
@@ -380,6 +427,7 @@ def main() -> None:
     # print(pieces) 
     global board
     board = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
+    # global all_board_coordinates
     all_board_coordinates = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
     # print("Length of board: ", len(board[1]))
     for i in range(int(file_content[0]),0,-1):
@@ -432,7 +480,7 @@ def main() -> None:
     # piece_at_ = piece_at(5 ,3, Bo)
     # print(piece_at_)
     
-    #----------------------------------------------------------------------------------------------------
+    #-------------------------------------------------  Can Reach  ---------------------------------------------------
     
     general_moves = {}
 
@@ -506,6 +554,69 @@ def main() -> None:
 
 
     print(general_moves)
+    print('\n')
+
+
+    # -------------------------------------------  Excluded Coordinates for King is in_cheque  -------------------------------------------------
+
+    general_moves_keys = general_moves.keys()
+
+    next_move = (2,3)
+
+    global in_check_excluded_coordinates
+    in_check_excluded_coordinates = []
+
+    for key in general_moves_keys:
+
+        if key[0] == 'K':
+            king_coordinates = location2index(key)
+
+            king_coordinates_with_side = piece_at(king_coordinates[0], king_coordinates[1], Bo)
+            # print(king_coordinates_with_side[2])
+
+            coordinates_excluded = []
+
+            for list_of_coordinates in all_board_coordinates:
+                for coordinates in list_of_coordinates:
+                    if is_piece_at(coordinates[0], coordinates[1], Bo) == True:
+                        pieces_side = piece_at(coordinates[0], coordinates[1], Bo)
+                        if pieces_side != None:
+                            if pieces_side[2] == king_coordinates_with_side[2]:
+                                coordinates_excluded.append((coordinates[0], coordinates[1]))
+                            else:
+                                piece_str = index2location(coordinates[0], coordinates[1])
+                                for key_ in general_moves_keys:
+                                    if piece_str == key_:
+                                        # print(piece_str)
+                                        pass
+                                        piece_values = general_moves[piece_str]
+                                        for piece_value in piece_values:
+                                            coordinates_excluded.append(piece_value[0])
+
+            in_check_excluded_coordinates.append(coordinates_excluded)
+                                            
+            print("King: ", king_coordinates_with_side)
+            print("Excluded Coordniates: ", coordinates_excluded)
+    print("board: ", Bo)
+    print(is_check(1, Bo))
+
+    # selected_piece = input("Select White Piece: ")
+    # white_move = input("Next move of White: ")
+    # print(white_move)
+
+    # ---------------------------------------------------  Board Configuration 2 Unicode  --------------------------------------------------------
+
+    board_config_to_unicode = (conf2unicode(Bo))
+    print(board_config_to_unicode)
+
+    # config_to_unicode = []
+    # board_config_to_unicode.split(board_config_to_unicode())
+    # print(config_to_unicode)
+
+    
+
+                                
+
 
     # bishop = Bishop(4, 4, piece_at_[2])
     
