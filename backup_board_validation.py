@@ -317,23 +317,23 @@ def conf2unicode(B: Board) -> str:
         bishop_or_king_side = piece_at_[2]
 
         if bishop_or_king == "K" and bishop_or_king_side == 1:
-            white_king = "\u2654","\u2001",f"{piece[0]},{piece[1]}", "#"
-            white_king = "".join(white_king)
+            white_king = "\u2654", f"{piece[0]},{piece[1]}", "#"
+            white_king = "_".join(white_king)
             board_configuration_2_unicode += white_king
             # print("\u2654", "\u2001", f"{piece[0]}, {piece[1]}")
         elif bishop_or_king == "K" and bishop_or_king_side == 0:
-            black_king = "\u265A","\u2001",f"{piece[0]},{piece[1]}", "#"
-            black_king = "".join(black_king)
+            black_king = "\u265A", f"{piece[0]},{piece[1]}", "#"
+            black_king = "_".join(black_king)
             board_configuration_2_unicode += black_king
             # print("\u265A", "\u2001", f"{piece[0]}, {piece[1]}")
         elif bishop_or_king == "B" and bishop_or_king_side == 1:
-            white_bishop = "\u2001","\u2657","\u2001",f"{piece[0]},{piece[1]}", "#"
-            white_bishop = "".join(white_bishop)
+            white_bishop = "\u2657", f"{piece[0]},{piece[1]}", "#"
+            white_bishop = "_".join(white_bishop)
             board_configuration_2_unicode += white_bishop
             # print("\u2657", "\u2001", f"{piece[0]}, {piece[1]}")
         elif bishop_or_king == "B" and bishop_or_king_side == 0:
-            black_bishop = "\u2001","\u265D","\u2001",f"{piece[0]},{piece[1]}","#"
-            black_bishop = "".join(black_bishop)
+            black_bishop = "\u265D", f"{piece[0]},{piece[1]}","#"
+            black_bishop = "_".join(black_bishop)
             board_configuration_2_unicode += black_bishop
             # print("\u265D", "\u2001", f"{piece[0]}, {piece[1]}")
 
@@ -607,32 +607,70 @@ def main() -> None:
     # ---------------------------------------------------  Board Configuration 2 Unicode  --------------------------------------------------------
 
     board_config_to_unicode = (conf2unicode(Bo))
-    print(board_config_to_unicode)
-
-    # config_to_unicode = []
-    # board_config_to_unicode.split(board_config_to_unicode())
-    # print(config_to_unicode)
+    # print(board_config_to_unicode)
 
     
+    config_to_unicode = board_config_to_unicode.split("#")
+    print(config_to_unicode)
 
-                                
 
+    all_board_coordinates_to_unicode = all_board_coordinates
 
-    # bishop = Bishop(4, 4, piece_at_[2])
+    """ ---------  getting index of rows and cols 
+                   from our board configuration
+                              (Start)              ------------"""
     
-    
-    # can_reach_ = bishop.can_reach(3, 5, Bo)
-    # print("bishop.can_reach: ",can_reach_)
+    row_index_board_config = []
+    for number in range(Bo[0]):
+        row_index_board_config.append(None)
+
+    col_index_board_config = []
+    for number in range(Bo[0]):
+        col_index_board_config.append(None)
+
+
+    for index in range(Bo[0]):
+        row_index_board_config[index] = index + 1
+        col_index_board_config[index] = Bo[0] - (index)
+
+    print("Row values: ", row_index_board_config)
+    print("Column values: ", col_index_board_config)
+
+
+    """ ---------  getting index of rows and cols 
+                   from our board configuration 
+                               (End)               ------------"""
+    print("all_board_coordinates_to_unicode", all_board_coordinates_to_unicode)
+    for piece in config_to_unicode:
+        if piece != "":
+            # for list_of_coordinates in all_board_coordinates_to_unicode:
                 
-    
-    # for key, values in general_moves.items():
-    #     if key == "Bb5":
-    #         print(values)
+            #     for coordinates in list_of_coordinates:
+            # if (piece[2], piece[4]) == coordinates:
+
+            # all_board_coordinates_to_unicode[int(piece[2])][int(piece[4])] = piece[0]
+            # print(piece[2], piece[4], "Testing")
+            for index, number in enumerate(row_index_board_config):
+                if number == int(piece[2]):
+                    # print(piece[2], index)
+                    row_index = index
+            
+            for index, number in enumerate(col_index_board_config):
+                if number == int(piece[4]):
+                    # print(piece[4], index)
+                    col_index = index
+            
+            print("row_index, col_index", row_index, col_index)
+
+            all_board_coordinates_to_unicode[row_index][col_index] = piece[0]
+    print("all_board_coordinates_to_unicode", all_board_coordinates_to_unicode)
+
+    # for list_of_coordinates in all_board_coordinates_to_unicode:
+                
+    #     print(list_of_coordinates)
 
 
 
-    
-    
 
 
 
