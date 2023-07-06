@@ -13,6 +13,7 @@ def location2index(loc: str) -> tuple[int, int]:
     column_value = alphabets_weights[column]
     return (column_value, int(loc.strip()[2]))
 
+
 	
 def index2location(x: int, y: int) -> str:
     '''converts  pair of coordinates to corresponding location'''
@@ -81,7 +82,6 @@ def piece_at(pos_X : int, pos_Y : int, B: Board) -> Piece:
         return check_list_[0]
     
 
-    
 
 class Bishop(Piece):
     def __init__(self, pos_X : int, pos_Y : int, side_ : bool):
@@ -256,12 +256,20 @@ def is_check(side: bool, B: Board) ->bool:
     checks if configuration of B is check for side
     Hint: use can_reach-
     '''
+
+    move_cord = location2index(move)
+
     if side == 1:
-        print(in_check_excluded_coordinates[0])
-        return True
+        
+        if move_cord in in_check_excluded_coordinates[0]:
+            return "In Check"
+        else:
+            return "Not in check"
     elif side == 0:
-        print(in_check_excluded_coordinates[1])
-        return True
+        if move_cord in in_check_excluded_coordinates[1]:
+            return "In Check"
+        else:
+            return "Not in check"
 
 def is_checkmate(side: bool, B: Board) -> bool:
     '''
@@ -597,13 +605,8 @@ def main() -> None:
                                             
             print("King: ", king_coordinates_with_side)
             print("Excluded Coordniates: ", coordinates_excluded)
-    print("board: ", Bo)
-    print(is_check(1, Bo))
 
-    # selected_piece = input("Select White Piece: ")
-    # white_move = input("Next move of White: ")
-    # print(white_move)
-
+   
     # ---------------------------------------------------  Board Configuration 2 Unicode  --------------------------------------------------------
 
     board_config_to_unicode = (conf2unicode(Bo))
@@ -611,7 +614,7 @@ def main() -> None:
 
     
     config_to_unicode = board_config_to_unicode.split("#")
-    print(config_to_unicode)
+    # print(config_to_unicode)
 
 
     all_board_coordinates_to_unicode = all_board_coordinates
@@ -633,46 +636,61 @@ def main() -> None:
         row_index_board_config[index] = index + 1
         col_index_board_config[index] = Bo[0] - (index)
 
-    print("Row values: ", row_index_board_config)
-    print("Column values: ", col_index_board_config)
+    # print("Row values: ", row_index_board_config)
+    # print("Column values: ", col_index_board_config)
 
 
-    """ ---------  getting index of rows and cols 
-                   from our board configuration 
-                               (End)               ------------"""
-    print("all_board_coordinates_to_unicode", all_board_coordinates_to_unicode)
+
+    """ ---------  Prinitng the configuration   ------------"""
+
+    # print("all_board_coordinates_to_unicode", all_board_coordinates_to_unicode)
+    row_index = []
+    col_index = []
+
     for piece in config_to_unicode:
         if piece != "":
-            # for list_of_coordinates in all_board_coordinates_to_unicode:
-                
-            #     for coordinates in list_of_coordinates:
-            # if (piece[2], piece[4]) == coordinates:
-
-            # all_board_coordinates_to_unicode[int(piece[2])][int(piece[4])] = piece[0]
-            # print(piece[2], piece[4], "Testing")
             for index, number in enumerate(row_index_board_config):
                 if number == int(piece[2]):
                     # print(piece[2], index)
-                    row_index = index
+                    row_index.append(index)
             
             for index, number in enumerate(col_index_board_config):
                 if number == int(piece[4]):
                     # print(piece[4], index)
-                    col_index = index
+                    col_index.append(index)
             
-            print("row_index, col_index", row_index, col_index)
 
-            all_board_coordinates_to_unicode[row_index][col_index] = piece[0]
-    print("all_board_coordinates_to_unicode", all_board_coordinates_to_unicode)
-
-    # for list_of_coordinates in all_board_coordinates_to_unicode:
-                
-    #     print(list_of_coordinates)
-
-
+    # print("row, col index", row_index, col_index)
+    for index, piece in enumerate(config_to_unicode):
+        
+        if len(piece) > 2:
+            # print(piece[0])
+            # print(row_index_board_config[row_index[index]], col_index_board_config[col_index[index]])
+            all_board_coordinates_to_unicode[col_index[index]][row_index[index]] = piece[0]
 
 
+    print("Board configuration 2 unicode")
 
+    for row in all_board_coordinates_to_unicode:
+        row_str = ""
+        for value in row:
+            if type(value) == tuple:
+                row_str += "\u2001"
+            elif type(value) == str:
+                row_str += value
+        print(row_str)
+
+
+    selected_piece = input("Select White Piece: ")
+    global move
+    move = input("Next move of White: ")
+    print(move)
+
+    selected_piece_cord = location2index(selected_piece)
+    selected_piece_cord_with_side = piece_at(selected_piece_cord[0], selected_piece_cord[1], Bo)   
+
+    print("board: ", Bo)
+    print(is_check(selected_piece_cord_with_side[2], Bo))
 
 
 if __name__ == '__main__': #keep this in
