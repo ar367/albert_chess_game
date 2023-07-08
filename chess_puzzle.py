@@ -351,75 +351,13 @@ def read_board(filename: str) -> Board:
     reads board configuration from file in current directory in plain format
     raises IOError exception if file is not valid (see section Plain board configurations)
     '''
-
-def save_board(filename: str, B: Board) -> None:
-    '''saves board configuration into file in current directory in plain format'''
-
-
-def find_black_move(B: Board) -> tuple[Piece, int, int]:
-    '''
-    returns (P, x, y) where a Black piece P can move on B to coordinates x,y according to chess rules 
-    assumes there is at least one black piece that can move somewhere
-
-    Hints: 
-    - use methods of random library
-    - use can_move_to
-    '''
-
-def conf2unicode(B: Board) -> str: 
-    '''converts board cofiguration B to unicode format string (see section Unicode board configurations)'''
-    pieces = B[1]
-
-    board_configuration_2_unicode = ""
-    
-    for piece in pieces:
-
-        index2loc = index2location(piece[0], piece[1])
-        bishop_or_king = index2loc[0]
-
-        piece_at_ = piece_at(piece[0], piece[1], B)
-        bishop_or_king_side = piece_at_[2]
-
-        if bishop_or_king == "K" and bishop_or_king_side == 1:
-            white_king = "\u2654", f"{piece[0]},{piece[1]}", "#"
-            white_king = "_".join(white_king)
-            board_configuration_2_unicode += white_king
-            # print("\u2654", "\u2001", f"{piece[0]}, {piece[1]}")
-        elif bishop_or_king == "K" and bishop_or_king_side == 0:
-            black_king = "\u265A", f"{piece[0]},{piece[1]}", "#"
-            black_king = "_".join(black_king)
-            board_configuration_2_unicode += black_king
-            # print("\u265A", "\u2001", f"{piece[0]}, {piece[1]}")
-        elif bishop_or_king == "B" and bishop_or_king_side == 1:
-            white_bishop = "\u2657", f"{piece[0]},{piece[1]}", "#"
-            white_bishop = "_".join(white_bishop)
-            board_configuration_2_unicode += white_bishop
-            # print("\u2657", "\u2001", f"{piece[0]}, {piece[1]}")
-        elif bishop_or_king == "B" and bishop_or_king_side == 0:
-            black_bishop = "\u265D", f"{piece[0]},{piece[1]}","#"
-            black_bishop = "_".join(black_bishop)
-            board_configuration_2_unicode += black_bishop
-            # print("\u265D", "\u2001", f"{piece[0]}, {piece[1]}")
-
-    for every_sis_spaces in board_configuration_2_unicode:
-        pass
-
-
-    return board_configuration_2_unicode
-
-
-
-
-def main() -> None:
-    # filename = input("File name for initial configuration: ")
     try:
-        global piece
+        # global piece
         pieces = []
-        piece = []
+        # piece = []
         board_validation = False
         # print("Testing")
-        while board_validation == False:
-            filename = input("File name for initial configuration: ")   
+        while board_validation == False: 
             # filename="board_examp.txt"
             file = open(filename)
             global file_content
@@ -487,13 +425,158 @@ def main() -> None:
         # print("Ending")
     except FileNotFoundError:
         print("The file does not exist.")
+
+
+    Bo = (5, pieces)
+    return Bo
+
+def save_board(filename: str, B: Board) -> None:
+    '''saves board configuration into file in current directory in plain format'''
+
+
+def find_black_move(B: Board) -> tuple[Piece, int, int]:
+    '''
+    returns (P, x, y) where a Black piece P can move on B to coordinates x,y according to chess rules 
+    assumes there is at least one black piece that can move somewhere
+
+    Hints: 
+    - use methods of random library
+    - use can_move_to
+    '''
+
+def conf2unicode(B: Board) -> str: 
+    '''converts board cofiguration B to unicode format string (see section Unicode board configurations)'''
+    pieces = B[1]
+
+    board_configuration_2_unicode = ""
     
-    # print(pieces) 
+    for piece in pieces:
+
+        index2loc = index2location(piece[0], piece[1])
+        bishop_or_king = index2loc[0]
+
+        piece_at_ = piece_at(piece[0], piece[1], B)
+        bishop_or_king_side = piece_at_[2]
+
+        if bishop_or_king == "K" and bishop_or_king_side == 1:
+            white_king = "\u2654", f"{piece[0]},{piece[1]}", "#"
+            white_king = "_".join(white_king)
+            board_configuration_2_unicode += white_king
+            # print("\u2654", "\u2001", f"{piece[0]}, {piece[1]}")
+        elif bishop_or_king == "K" and bishop_or_king_side == 0:
+            black_king = "\u265A", f"{piece[0]},{piece[1]}", "#"
+            black_king = "_".join(black_king)
+            board_configuration_2_unicode += black_king
+            # print("\u265A", "\u2001", f"{piece[0]}, {piece[1]}")
+        elif bishop_or_king == "B" and bishop_or_king_side == 1:
+            white_bishop = "\u2657", f"{piece[0]},{piece[1]}", "#"
+            white_bishop = "_".join(white_bishop)
+            board_configuration_2_unicode += white_bishop
+            # print("\u2657", "\u2001", f"{piece[0]}, {piece[1]}")
+        elif bishop_or_king == "B" and bishop_or_king_side == 0:
+            black_bishop = "\u265D", f"{piece[0]},{piece[1]}","#"
+            black_bishop = "_".join(black_bishop)
+            board_configuration_2_unicode += black_bishop
+            # print("\u265D", "\u2001", f"{piece[0]}, {piece[1]}")
+
+    for every_sis_spaces in board_configuration_2_unicode:
+        pass
+
+
+    return board_configuration_2_unicode
+
+
+
+
+def main() -> None:
+    # filename = input("File name for initial configuration: ")
+    global piece
+    # pieces = []
+    piece = []
+    # try:
+    #     # global piece
+    #     # pieces = []
+    #     # piece = []
+    #     board_validation = False
+    #     # print("Testing")
+    #     while board_validation == False:
+    #         filename = input("File name for initial configuration: ")   
+    #         # filename="board_examp.txt"
+    #         file = open(filename)
+    #         global file_content
+    #         file_content = file.readlines()
+    #         if (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
+    #             board_validation = False
+    #             print("Dimentions are not correct")
+    #             continue
+
+            
+    #         # while (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
+    #         #     file_content[0] = int(input("Enter the number again"))
+            
+    #         white_pieces = file_content[1].split(",")
+
+    #         bool_pool = []
+    #         for white_piece in white_pieces:
+    #             # print(white_piece)
+    #             loc2index = location2index(white_piece)
+
+    #             piece_class = Piece(int(loc2index[0]), int(loc2index[1]), 1)
+    #             pieces.append([piece_class.pos_X, piece_class.pos_Y, piece_class.side_])
+
+    #             piece.append([loc2index, white_piece, "white"])
+
+    #             # if (alphabets_weights[white_piece.strip()[1]] > 0) and (alphabets_weights[white_piece.strip()[1]] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
+    #             if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
+    #                 # pass
+    #                 # print("In White Piece")
+    #                 board_validation = True
+                    
+    #             else:
+    #                 print("The file is not valid: white")
+    #                 # board_validation = False
+    #                 bool_pool.append(False)
+    #                 break
+
+    #         black_pieces = file_content[2].split(",")
+
+    #         for black_piece in black_pieces:
+    #             # print(black_piece)
+
+    #             loc2index = location2index(black_piece)
+
+    #             piece_class = Piece(int(loc2index[0]), int(loc2index[1]), 0)
+    #             pieces.append([piece_class.pos_X, piece_class.pos_Y, piece_class.side_])
+
+    #             piece.append([loc2index, black_piece, "black"])
+
+    #             if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(black_piece.strip()[2:]) <= int(file_content[0])):
+    #                 # pass
+    #                 # print("In Black Piece")
+    #                 board_validation = True
+    #             else:
+    #                 # print("The file is not valid: black") 
+    #                 # board_validation = False
+    #                 bool_pool.append(False)
+    #                 break
+    #         if False in bool_pool:
+    #             board_validation = False
+    #         elif board_validation == True:
+    #             print("File is valid")
+
+    #         file.close()
+    #     # print("Ending")
+    # except FileNotFoundError:
+    #     print("The file does not exist.")
+     # Bo = (5, pieces)
+
+    filename = input("File name for initial configuration: ") 
+    Bo = read_board(filename)
+    
+    #-------------------------------------------------  All Board Coordinates  ---------------------------------------------------
     global board
     board = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
-    # global all_board_coordinates
     all_board_coordinates = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
-    # print("Length of board: ", len(board[1]))
     for i in range(int(file_content[0]),0,-1):
         for j in range(1, int(file_content[0])+1):
 
@@ -515,34 +598,14 @@ def main() -> None:
 
             for k in piece:
                 if k[0] == (j,i):
-                    # print("Hello World", j, i)
                     board[rows[i-1]][cols[j-1]] = k
                 all_board_coordinates[rows[i-1]][cols[j-1]] = (j,i)
 
-    # print(board[0])
-    # for list in board:
-    #     print(list)
-    index2loc = index2location(3, 1)
 
 
 
 
-    # print(index2loc)
-
-    Bo = (5, pieces)
-    # print(Bo)
-
-    # print('\n Board', board)
-
-    # print("\n")
-
-    # is_piece_at_ = is_piece_at(4 , 4, Bo)
-    # print(is_piece_at_, "Is piece at")
-
-
-    # print("\n")
-    # piece_at_ = piece_at(5 ,3, Bo)
-    # print(piece_at_)
+   
     
     #-------------------------------------------------  Can Reach  ---------------------------------------------------
     global general_moves
@@ -762,17 +825,24 @@ def main() -> None:
                 row_str += value
         print(row_str)
 
+    terminate = ""
+    while True:
+        selected_piece = input("Select White Piece: ")
+        if selected_piece == "QUIT" or selected_piece == "quit":
+            break
+        global move
+        move = input("Next move of White: ")
+        if move == "QUIT" or move == "quit":
+            break
+        print(move)
 
-    selected_piece = input("Select White Piece: ")
-    global move
-    move = input("Next move of White: ")
-    print(move)
+        selected_piece_cord = location2index(selected_piece)
+        selected_piece_cord_with_side = piece_at(selected_piece_cord[0], selected_piece_cord[1], Bo)   
 
-    selected_piece_cord = location2index(selected_piece)
-    selected_piece_cord_with_side = piece_at(selected_piece_cord[0], selected_piece_cord[1], Bo)   
+        print("board: ", Bo)
+        print(is_check(selected_piece_cord_with_side[2], Bo))
 
-    print("board: ", Bo)
-    print(is_check(selected_piece_cord_with_side[2], Bo))
+        break
 
 
 if __name__ == '__main__': #keep this in
