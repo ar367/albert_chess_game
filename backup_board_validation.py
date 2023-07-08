@@ -432,6 +432,23 @@ def read_board(filename: str) -> Board:
 
 def save_board(filename: str, B: Board) -> None:
     '''saves board configuration into file in current directory in plain format'''
+    # move
+    board_copy = B[1].copy()
+    new_board_list = []
+    select_piece_cordinates = location2index(selected_piece)
+    select_piece_with_side = piece_at(select_piece_cordinates[0],select_piece_cordinates[1], B)
+
+    for board_piece in board_copy:
+        
+        if board_piece != select_piece_with_side:
+            new_board_list.append(board_piece)
+
+    move_cordinates = location2index(move)
+    move_with_side = [move_cordinates[0], move_cordinates[1], select_piece_with_side[2]]
+    new_board_list.append(move_with_side)
+    new_board = (B[0], new_board_list)
+    print(new_board)
+    print(B)
 
 
 def find_black_move(B: Board) -> tuple[Piece, int, int]:
@@ -576,6 +593,7 @@ def main() -> None:
     #-------------------------------------------------  All Board Coordinates  ---------------------------------------------------
     global board
     board = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
+    global all_board_coordinates
     all_board_coordinates = [[None for i in range(int(file_content[0]))] for j in range(int(file_content[0]))]
     for i in range(int(file_content[0]),0,-1):
         for j in range(1, int(file_content[0])+1):
@@ -827,6 +845,7 @@ def main() -> None:
 
     terminate = ""
     while True:
+        global selected_piece
         selected_piece = input("Select White Piece: ")
         if selected_piece == "QUIT" or selected_piece == "quit":
             break
@@ -843,6 +862,10 @@ def main() -> None:
         print(is_check(selected_piece_cord_with_side[2], Bo))
 
         break
+
+    file_name_to_save = "board_examp_temp"
+
+    save_board(file_name_to_save, Bo)
 
 
 if __name__ == '__main__': #keep this in
