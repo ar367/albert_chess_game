@@ -450,6 +450,60 @@ def save_board(filename: str, B: Board) -> None:
     print(new_board)
     print(B)
 
+    white_pieces_updated = []
+    black_pieces_updated = []
+    
+    for piece_cords_with_side in new_board[1]:
+        if piece_cords_with_side[0] == move_cordinates[0] and piece_cords_with_side[1] == move_cordinates[1]:
+            if move_with_side[2] == 1:
+                white_pieces_updated.append(move)
+            elif move_with_side[2] == 0:
+                black_pieces_updated.append(move)
+
+        if piece_cords_with_side[2] == 1:
+            pieces_with_side_to_str = index2location(piece_cords_with_side[0], piece_cords_with_side[1])
+            white_pieces_updated.append(pieces_with_side_to_str)
+        elif piece_cords_with_side[2] == 0:
+            pieces_with_side_to_str = index2location(piece_cords_with_side[0], piece_cords_with_side[1])
+            black_pieces_updated.append(pieces_with_side_to_str)
+    
+    for white_piece in white_pieces_updated:
+        if white_piece == None:
+            white_pieces_updated.remove(None) 
+    for black_piece in black_pieces_updated:
+        if black_piece == None:
+            black_pieces_updated.remove(None) 
+
+    white_pieces_updated_to_str = " ".join(white_pieces_updated)
+    black_pieces_updated_to_str = " ".join(black_pieces_updated)
+
+    print("white_piece_update: ", white_pieces_updated_to_str)
+    print("black_piece_update: ", black_pieces_updated_to_str)
+
+    # with open(filename, 'w') as board_temp:
+        
+    #     board_temp.write(str(new_board[0]))
+    #     board_temp.write('\n')
+
+    #     for line in white_pieces_updated_to_str:
+    #         board_temp.write(str(line))
+    #         board_temp.write('\n')
+            
+    #     for line in black_pieces_updated_to_str:
+    #         board_temp.write(str(line))
+    #         board_temp.write('\n')
+
+
+    list_white_black_pieces_with_dimention = [str(new_board[0]), white_pieces_updated_to_str, black_pieces_updated_to_str]
+    
+    with open(filename, 'w') as board_temp:
+
+        for line in list_white_black_pieces_with_dimention:
+            board_temp.write(line)
+            board_temp.write('\n')
+            
+    
+
 
 def find_black_move(B: Board) -> tuple[Piece, int, int]:
     '''
