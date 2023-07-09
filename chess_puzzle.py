@@ -140,6 +140,29 @@ class Bishop(Piece):
         - finally, to check [Rule4], use is_check on new board
         '''
 
+        for board_piece in B[2]:
+            if (pos_X, pos_Y) == (board_piece[0], board_piece[1]):
+                side_ = piece[2]
+        
+        if side_ == 1:
+            temp_ = []
+            for coords in black_pieces_can_reach_unique:
+                if coords[0] == pos_X and coords[1] == pos_Y:
+                    temp_.append(True)
+            if temp_ == []:
+                return (False, "Hello False white can move")
+            else: 
+                return (True, "Hello True can move")
+        print("white_and_black_coordinates_excluded: ", white_pieces_can_reach_unique)
+        if side_ == 0:
+            temp_ = []
+            for coords in white_pieces_can_reach_unique:
+                if coords[0] == pos_X and coords[1] == pos_Y:
+                    temp_.append(True)
+            if temp_ == []:
+                return (False, "Hello False black can move")
+            else: 
+                return (True, "Hello True can move")
       
     def move_to(self, pos_X : int, pos_Y : int, B: Board) -> Board:
         '''
@@ -262,6 +285,7 @@ def is_check(side: bool, B: Board) ->bool:
     
     white_king = ""
     black_king = ""
+
     for coordinates in B[1]:
         piece_at_ = piece_at(coordinates[0], coordinates[1], B)
         piece = index2location(coordinates[0], coordinates[1])
@@ -270,60 +294,72 @@ def is_check(side: bool, B: Board) ->bool:
                 white_king += piece
             elif piece_at_[2] == 0:
                 black_king += piece
+            
+    w_p_cord = location2index(white_king)
+    b_p_cord = location2index(black_king)
     
     move_cord = location2index(move)
+
     if side == 1:
-        white_king_can_reach_moves = general_moves[white_king]
-        white_king_can_reach_moves_unique = set()
-        for moves in white_king_can_reach_moves:
-            white_king_can_reach_moves_unique.add(moves[0])
-        print("white_king_can_reach_moves: ", white_king_can_reach_moves_unique)
+        temp_ = []
+        for coords in black_pieces_can_reach_unique:
+            if coords[0] == w_p_cord[0] and coords[1] == w_p_cord[1]:
+                temp_.append(True)
+        if temp_ == []:
+            return (False, "Hello False white")
+        else: 
+            return (True, "Hello True")
+    print("white_and_black_coordinates_excluded: ", white_pieces_can_reach_unique)
+    if side == 0:
+        temp_ = []
+        for coords in white_pieces_can_reach_unique:
+            if coords[0] == b_p_cord[0] and coords[1] == b_p_cord[1]:
+                temp_.append(True)
+        if temp_ == []:
+            return (False, "Hello False black")
+        else: 
+            return (True, "Hello True")
 
-        in_check__white_king_excluded_coordinates_unique=set()
-        for cords in in_check_excluded_coordinates[0]:
-            in_check__white_king_excluded_coordinates_unique.add(tuple(cords))
-        print("in_check_excluded_coordinates: ", in_check__white_king_excluded_coordinates_unique)
 
-        set_difference = white_king_can_reach_moves_unique.difference(in_check__white_king_excluded_coordinates_unique)
-
-        print("length of set_difference: ", len(set_difference))
-        if len(set_difference) == 0:
-            return True
-        else:
-            return False
-    elif side == 0:
-        black_king_can_reach_moves = general_moves[black_king]
-        black_king_can_reach_moves_unique = set()
-        for moves in black_king_can_reach_moves:
-            black_king_can_reach_moves_unique.add(moves[0])
-        print("black_king_can_reach_moves: ", black_king_can_reach_moves_unique)
-
-        in_check_black_king_excluded_coordinates_unique=set()
-        for cords in in_check_excluded_coordinates[0]:
-            in_check_black_king_excluded_coordinates_unique.add(tuple(cords))
-        print("in_check_excluded_coordinates: ", in_check_black_king_excluded_coordinates_unique)
-
-        set_difference_black = black_king_can_reach_moves_unique.difference(in_check_black_king_excluded_coordinates_unique)
-
-        print("length of set_difference: ", len(set_difference_black))
-        if len(set_difference_black) == 0:
-            return True
-        else:
-            return False
-
-    # move_cord = location2index(move)
 
     # if side == 1:
-        
-    #     if move_cord in in_check_excluded_coordinates[0]:
-    #         return "In Check"
+    #     white_king_can_reach_moves = general_moves[white_king]
+    #     white_king_can_reach_moves_unique = set()
+    #     for moves in white_king_can_reach_moves:
+    #         white_king_can_reach_moves_unique.add(moves[0])
+    #     print("white_king_can_reach_moves: ", white_king_can_reach_moves_unique)
+
+    #     in_check__white_king_excluded_coordinates_unique=set()
+    #     for cords in in_check_excluded_coordinates[0]:
+    #         in_check__white_king_excluded_coordinates_unique.add(tuple(cords))
+    #     print("in_check_excluded_coordinates: ", in_check__white_king_excluded_coordinates_unique)
+
+    #     set_difference = white_king_can_reach_moves_unique.difference(in_check__white_king_excluded_coordinates_unique)
+
+    #     print("length of set_difference: ", len(set_difference))
+    #     if len(set_difference) == 0:
+    #         return True
     #     else:
-    #         return "Not in check"
+    #         return False
     # elif side == 0:
-    #     if move_cord in in_check_excluded_coordinates[1]:
-    #         return "In Check"
+    #     black_king_can_reach_moves = general_moves[black_king]
+    #     black_king_can_reach_moves_unique = set()
+    #     for moves in black_king_can_reach_moves:
+    #         black_king_can_reach_moves_unique.add(moves[0])
+    #     print("black_king_can_reach_moves: ", black_king_can_reach_moves_unique)
+
+    #     in_check_black_king_excluded_coordinates_unique=set()
+    #     for cords in in_check_excluded_coordinates[0]:
+    #         in_check_black_king_excluded_coordinates_unique.add(tuple(cords))
+    #     print("in_check_excluded_coordinates: ", in_check_black_king_excluded_coordinates_unique)
+
+    #     set_difference_black = black_king_can_reach_moves_unique.difference(in_check_black_king_excluded_coordinates_unique)
+
+    #     print("length of set_difference: ", len(set_difference_black))
+    #     if len(set_difference_black) == 0:
+    #         return True
     #     else:
-    #         return "Not in check"
+    #         return False
         
     
 
@@ -335,7 +371,43 @@ def is_checkmate(side: bool, B: Board) -> bool:
     - use is_check
     - use can_move_to
     '''
+    white_king = ""
+    black_king = ""
+
+    for coordinates in B[1]:
+        piece_at_ = piece_at(coordinates[0], coordinates[1], B)
+        piece = index2location(coordinates[0], coordinates[1])
+        if piece[0] == 'K':
+            if piece_at_[2] == 1:
+                white_king += piece
+            elif piece_at_[2] == 0:
+                black_king += piece
+
+    can_reach_white_king = general_moves[white_king]
+    can_reach_white_king_unique = []
+    for piece_can_reach in can_reach_white_king:
+        can_reach_white_king_unique.append(piece_can_reach[0])
+    can_reach_white_king_unique = set(can_reach_white_king_unique)
+
+    if side == 1:
+        set_difference_white = can_reach_white_king_unique.difference(black_pieces_can_reach_unique)
+        if len(set_difference_white) == 0:
+            return True
+        else:
+            return False
     
+    can_reach_black_king = general_moves[black_king]
+    can_reach_black_king_unique = []
+    for piece_can_reach in can_reach_black_king:
+        can_reach_black_king_unique.append(piece_can_reach[0])
+    can_reach_black_king_unique = set(can_reach_black_king_unique)
+
+    if side == 0:
+        set_difference_black = can_reach_black_king_unique.difference(white_pieces_can_reach_unique)
+        if len(set_difference_black) == 0:
+            return True
+        else:
+            return False
 
 def is_stalemate(side: bool, B: Board) -> bool:
     '''
@@ -447,8 +519,8 @@ def save_board(filename: str, B: Board) -> None:
     move_with_side = [move_cordinates[0], move_cordinates[1], select_piece_with_side[2]]
     new_board_list.append(move_with_side)
     new_board = (B[0], new_board_list)
-    print(new_board)
-    print(B)
+    # print(new_board)
+    # print(B)
 
     white_pieces_updated = []
     black_pieces_updated = []
@@ -477,8 +549,8 @@ def save_board(filename: str, B: Board) -> None:
     white_pieces_updated_to_str = " ".join(white_pieces_updated)
     black_pieces_updated_to_str = " ".join(black_pieces_updated)
 
-    print("white_piece_update: ", white_pieces_updated_to_str)
-    print("black_piece_update: ", black_pieces_updated_to_str)
+    # print("white_piece_update: ", white_pieces_updated_to_str)
+    # print("black_piece_update: ", black_pieces_updated_to_str)
 
     # with open(filename, 'w') as board_temp:
         
@@ -757,7 +829,7 @@ def main() -> None:
 
     general_moves_keys = general_moves.keys()
 
-    # ------------------------------------------------  Identify White and Black Pieces  -------------------------------------------------------
+    # -------Identify White and Black Pieces-------  
     white_pieces = []
     black_pieces = []
 
@@ -771,57 +843,92 @@ def main() -> None:
 
     print("\nWhite pieces: ", white_pieces)
     print("\nBlack pieces: ", black_pieces)
+
+
+    # -------white and black pieces can reach-------
+
+    can_reach_white_pieces = []
+    for w_piece in white_pieces:
+        can_reach_white_pieces.append(general_moves[w_piece])
+
+
+    can_reach_black_pieces = []
+    for b_piece in black_pieces:
+        can_reach_black_pieces.append(general_moves[b_piece])    
+
+ 
+    white_pieces_can_reach = []
+    for white_pieces_info in can_reach_white_pieces:
+        for piece_value in white_pieces_info:
+            white_pieces_can_reach.append(piece_value[0])
+    global white_pieces_can_reach_unique
+    white_pieces_can_reach_unique = list(set(white_pieces_can_reach))
+    print("white_pieces_can_reach_unique: ", white_pieces_can_reach_unique)
+
+    black_pieces_can_reach = []
+    for black_pieces_info in can_reach_black_pieces:
+        for piece_value in black_pieces_info:
+            black_pieces_can_reach.append(piece_value[0])
+    global black_pieces_can_reach_unique
+    black_pieces_can_reach_unique = list(set(black_pieces_can_reach))
+    print("black_pieces_can_reach_unique: ", black_pieces_can_reach_unique)
+
     # -------------------------------------------  Excluded Coordinates for King is in_cheque  -------------------------------------------------
 
     
-    import numpy as np
+    # import numpy as np
 
-    next_move = (2,3)
+    # next_move = (2,3)
 
-    global in_check_excluded_coordinates
-    in_check_excluded_coordinates = []
-    same_side_excluded_coordinates = []
+    # global white_and_black_coordinates_excluded
+    # white_and_black_coordinates_excluded = []
+
+    # global in_check_excluded_coordinates
+    # in_check_excluded_coordinates = []
+    # same_side_excluded_coordinates = []
     
-    for key in general_moves_keys:
+    # for key in general_moves_keys:
 
-        if key[0] == 'K':
-            king_coordinates = location2index(key)
+        # if key[0] == 'K':
+        #     king_coordinates = location2index(key)
 
-            king_coordinates_with_side = piece_at(king_coordinates[0], king_coordinates[1], Bo)
-            # print(king_coordinates_with_side[2])
+        #     king_coordinates_with_side = piece_at(king_coordinates[0], king_coordinates[1], Bo)
+        #     # print(king_coordinates_with_side[2])
 
-            same_side_coordinates_excluded = []
-            coordinates_excluded = []
+        #     same_side_coordinates_excluded = []
+        #     coordinates_excluded = []
 
-            for list_of_coordinates in all_board_coordinates:
-                for coordinates in list_of_coordinates:
-                    if is_piece_at(coordinates[0], coordinates[1], Bo) == True:
-                        pieces_side = piece_at(coordinates[0], coordinates[1], Bo)
-                        if pieces_side != None:
-                            if pieces_side[2] == king_coordinates_with_side[2]:
-                                same_side_coordinates_excluded.append((coordinates[0], coordinates[1]))
-                            else:
-                                king_values = general_moves[key]
-                                for value in king_values:
+        #     for list_of_coordinates in all_board_coordinates:
+        #         for coordinates in list_of_coordinates:
+        #             if is_piece_at(coordinates[0], coordinates[1], Bo) == True:
+        #                 pieces_side = piece_at(coordinates[0], coordinates[1], Bo)
+        #                 if pieces_side != None:
+        #                     if pieces_side[2] == king_coordinates_with_side[2]:
+        #                         same_side_coordinates_excluded.append((coordinates[0], coordinates[1]))
+        #                     else: 
+        #                         king_values = general_moves[key]
+        #                         for value in king_values:
                                     
-                                    piece_cord_with_side = piece_at(coordinates[0], coordinates[1], Bo)
-                                    if piece_cord_with_side[2] != king_coordinates_with_side[2]:
-                                        piece_str = index2location(coordinates[0], coordinates[1])
-                                        piece_values = general_moves[piece_str]
-                                        if value in piece_values:
-                                            coordinates_excluded.append(value[0])
+        #                             piece_cord_with_side = piece_at(coordinates[0], coordinates[1], Bo)
+        #                             if piece_cord_with_side[2] != king_coordinates_with_side[2]:
+        #                                 piece_str = index2location(coordinates[0], coordinates[1])
+        #                                 piece_values = general_moves[piece_str]
+        #                                 if value in piece_values:
+        #                                     coordinates_excluded.append(value[0])
 
             
 
-            arr = np.concatenate((coordinates_excluded, same_side_coordinates_excluded))
-            in_check_excluded_coordinates.append(arr)
+            # white_and_black_coordinates_excluded.append(coordinates_excluded)
 
-            same_side_excluded_coordinates.append(same_side_coordinates_excluded)
-            # in_check_excluded_coordinates.append(coordinates_excluded)
+            # arr = np.concatenate((coordinates_excluded, same_side_coordinates_excluded))
+            # in_check_excluded_coordinates.append(arr)
+
+            # same_side_excluded_coordinates.append(same_side_coordinates_excluded)
+            # # in_check_excluded_coordinates.append(coordinates_excluded)
                                             
-            print("King: ", king_coordinates_with_side)
-            print("Excluded Coordniates: ", list(set(coordinates_excluded)))
-            print("Excluded Coordniates same side: ", same_side_coordinates_excluded)
+            # print("King: ", king_coordinates_with_side)
+            # print("Excluded Coordniates: ", list(set(coordinates_excluded)))
+            # print("Excluded Coordniates same side: ", same_side_coordinates_excluded)
 
    
     # ---------------------------------------------------  Board Configuration 2 Unicode  --------------------------------------------------------
@@ -913,13 +1020,19 @@ def main() -> None:
         selected_piece_cord_with_side = piece_at(selected_piece_cord[0], selected_piece_cord[1], Bo)   
 
         print("board: ", Bo)
-        print(is_check(selected_piece_cord_with_side[2], Bo))
+        global is_check_piece
+        is_check_piece = is_check(selected_piece_cord_with_side[2], Bo)
+        print("Checking Checkmate: ", is_checkmate(0, Bo))
+        
+
 
         break
 
     file_name_to_save = "board_examp_temp"
 
     save_board(file_name_to_save, Bo)
+
+
 
 
 if __name__ == '__main__': #keep this in
