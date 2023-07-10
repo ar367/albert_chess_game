@@ -139,36 +139,52 @@ class Bishop(Piece):
         - thirdly, construct new board resulting from move
         - finally, to check [Rule4], use is_check on new board
         '''
+        piece_location = index2location(pos_X, pos_Y)
 
-        for board_piece in B[2]:
-            if (pos_X, pos_Y) == (board_piece[0], board_piece[1]):
-                side_ = piece[2]
+        if is_check_piece == True:
+            return False
+
+        elif is_check_piece == False:
+            if len(general_moves[piece_location]) == 0:
+                return False
+            else:
+                return True
+            
+
+
         
-        if side_ == 1:
-            temp_ = []
-            for coords in black_pieces_can_reach_unique:
-                if coords[0] == pos_X and coords[1] == pos_Y:
-                    temp_.append(True)
-            if temp_ == []:
-                return (False, "Hello False white can move")
-            else: 
-                return (True, "Hello True can move")
-        print("white_and_black_coordinates_excluded: ", white_pieces_can_reach_unique)
-        if side_ == 0:
-            temp_ = []
-            for coords in white_pieces_can_reach_unique:
-                if coords[0] == pos_X and coords[1] == pos_Y:
-                    temp_.append(True)
-            if temp_ == []:
-                return (False, "Hello False black can move")
-            else: 
-                return (True, "Hello True can move")
       
     def move_to(self, pos_X : int, pos_Y : int, B: Board) -> Board:
         '''
         returns new board resulting from move of this rook to coordinates pos_X, pos_Y on board B 
         assumes this move is valid according to chess rules
         '''
+
+        Board_pieces_copy = B[1].copy()
+
+        select_piece_cordinates = location2index(selected_piece)
+        select_piece_with_side = piece_at(select_piece_cordinates[0],select_piece_cordinates[1], B)
+
+        move_cordinates = location2index(move)
+        move_with_side = [move_cordinates[0], move_cordinates[1], select_piece_with_side[2]]
+        # print(B)
+
+        white_pieces_updated = []
+        black_pieces_updated = []
+        # print("select_piece_with_side: ", select_piece_with_side)
+        # print("B[1][select_piece_with_side]: ", B[1][select_piece_with_side])
+        for index, piece_cords_with_side in enumerate(Board_pieces_copy):
+            if piece_cords_with_side[0] == select_piece_with_side[0] and piece_cords_with_side[1] == select_piece_with_side[1]:
+                # print("piece_cords_with_side", piece_cords_with_side)
+                # print("move_with_side: ", move_with_side)
+                piece_cords_with_side =  move_with_side
+                Board_pieces_copy[index] = move_with_side
+        moved_board = (B[0], Board_pieces_copy)
+        # print("Moved_Board: ",  moved_board)
+        return B
+
+
+
 
 
 class King(Piece):
@@ -241,41 +257,45 @@ class King(Piece):
 
     def can_move_to(self, pos_X : int, pos_Y : int, B: Board) -> bool:
         '''checks if this king can move to coordinates pos_X, pos_Y on board B according to all chess rules'''
+        piece_location = index2location(pos_X, pos_Y)
 
+        if is_check_piece == True:
+            return False
+
+        elif is_check_piece == False:
+            if len(general_moves[piece_location]) == 0:
+                return False
+            else:
+                return True
         return 
+    
     def move_to(self, pos_X : int, pos_Y : int, B: Board) -> Board:
         '''
         returns new board resulting from move of this king to coordinates pos_X, pos_Y on board B 
         assumes this move is valid according to chess rules
         '''
-        updated_position_x_king = pos_X
-        updated_position_y_king = pos_Y
+        Board_pieces_copy = B[1].copy()
 
-        """
-            Meaningful words
-                abs - absdolute
-                diff - difference
-                up - updated 
-                init - initial
-                comp - comparison
+        select_piece_cordinates = location2index(selected_piece)
+        select_piece_with_side = piece_at(select_piece_cordinates[0],select_piece_cordinates[1], B)
 
-                
-                attr - attribute 
-                bwd - between
-        """
+        move_cordinates = location2index(move)
+        move_with_side = [move_cordinates[0], move_cordinates[1], select_piece_with_side[2]]
+        # print(B)
 
-        abs_diff_up_x_from_init_x = abs(self.initial_position_x_king - updated_position_x_king)
-        abs_diff_up_y_from_init_y = abs(self.initial_position_y_king - updated_position_y_king) 
-        comp_btw_init_and_up_attr_king = (self.initial_position_x_king, self.initial_position_y_king) != ( updated_position_x_king,updated_position_y_king)
-        
-        one = 1
-
-        valid_move = abs_diff_up_x_from_init_x <= one and  abs_diff_up_y_from_init_y <= one and comp_btw_init_and_up_attr_king
-        
-        if valid_move:
-            print("YES")
-        else:
-            print("NO")
+        white_pieces_updated = []
+        black_pieces_updated = []
+        # print("select_piece_with_side: ", select_piece_with_side)
+        # print("B[1][select_piece_with_side]: ", B[1][select_piece_with_side])
+        for index, piece_cords_with_side in enumerate(Board_pieces_copy):
+            if piece_cords_with_side[0] == select_piece_with_side[0] and piece_cords_with_side[1] == select_piece_with_side[1]:
+                print("piece_cords_with_side", piece_cords_with_side)
+                print("move_with_side: ", move_with_side)
+                piece_cords_with_side =  move_with_side
+                Board_pieces_copy[index] = move_with_side
+        moved_board = (B[0], Board_pieces_copy)
+        print("Moved_Board: ",  moved_board)
+        return B
 
 def is_check(side: bool, B: Board) ->bool: 
     '''
@@ -297,8 +317,6 @@ def is_check(side: bool, B: Board) ->bool:
             
     w_p_cord = location2index(white_king)
     b_p_cord = location2index(black_king)
-    
-    move_cord = location2index(move)
 
     if side == 1:
         temp_ = []
@@ -306,61 +324,18 @@ def is_check(side: bool, B: Board) ->bool:
             if coords[0] == w_p_cord[0] and coords[1] == w_p_cord[1]:
                 temp_.append(True)
         if temp_ == []:
-            return (False, "Hello False white")
+            return False
         else: 
-            return (True, "Hello True")
-    print("white_and_black_coordinates_excluded: ", white_pieces_can_reach_unique)
+            return True
     if side == 0:
         temp_ = []
         for coords in white_pieces_can_reach_unique:
             if coords[0] == b_p_cord[0] and coords[1] == b_p_cord[1]:
                 temp_.append(True)
         if temp_ == []:
-            return (False, "Hello False black")
+            return False
         else: 
-            return (True, "Hello True")
-
-
-
-    # if side == 1:
-    #     white_king_can_reach_moves = general_moves[white_king]
-    #     white_king_can_reach_moves_unique = set()
-    #     for moves in white_king_can_reach_moves:
-    #         white_king_can_reach_moves_unique.add(moves[0])
-    #     print("white_king_can_reach_moves: ", white_king_can_reach_moves_unique)
-
-    #     in_check__white_king_excluded_coordinates_unique=set()
-    #     for cords in in_check_excluded_coordinates[0]:
-    #         in_check__white_king_excluded_coordinates_unique.add(tuple(cords))
-    #     print("in_check_excluded_coordinates: ", in_check__white_king_excluded_coordinates_unique)
-
-    #     set_difference = white_king_can_reach_moves_unique.difference(in_check__white_king_excluded_coordinates_unique)
-
-    #     print("length of set_difference: ", len(set_difference))
-    #     if len(set_difference) == 0:
-    #         return True
-    #     else:
-    #         return False
-    # elif side == 0:
-    #     black_king_can_reach_moves = general_moves[black_king]
-    #     black_king_can_reach_moves_unique = set()
-    #     for moves in black_king_can_reach_moves:
-    #         black_king_can_reach_moves_unique.add(moves[0])
-    #     print("black_king_can_reach_moves: ", black_king_can_reach_moves_unique)
-
-    #     in_check_black_king_excluded_coordinates_unique=set()
-    #     for cords in in_check_excluded_coordinates[0]:
-    #         in_check_black_king_excluded_coordinates_unique.add(tuple(cords))
-    #     print("in_check_excluded_coordinates: ", in_check_black_king_excluded_coordinates_unique)
-
-    #     set_difference_black = black_king_can_reach_moves_unique.difference(in_check_black_king_excluded_coordinates_unique)
-
-    #     print("length of set_difference: ", len(set_difference_black))
-    #     if len(set_difference_black) == 0:
-    #         return True
-    #     else:
-    #         return False
-        
+            return True
     
 
 def is_checkmate(side: bool, B: Board) -> bool:
@@ -491,7 +466,7 @@ def read_board(filename: str) -> Board:
             if False in bool_pool:
                 board_validation = False
             elif board_validation == True:
-                print("File is valid")
+                print("File is valid\n")
 
             file.close()
         # print("Ending")
@@ -509,13 +484,15 @@ def save_board(filename: str, B: Board) -> None:
     new_board_list = []
     select_piece_cordinates = location2index(selected_piece)
     select_piece_with_side = piece_at(select_piece_cordinates[0],select_piece_cordinates[1], B)
-
+    # print("select_piece_cordinates: ", select_piece_cordinates)
+    # print("select_piece_with_side: ", select_piece_with_side)
     for board_piece in board_copy:
         
         if board_piece != select_piece_with_side:
             new_board_list.append(board_piece)
 
     move_cordinates = location2index(move)
+   
     move_with_side = [move_cordinates[0], move_cordinates[1], select_piece_with_side[2]]
     new_board_list.append(move_with_side)
     new_board = (B[0], new_board_list)
@@ -548,23 +525,6 @@ def save_board(filename: str, B: Board) -> None:
 
     white_pieces_updated_to_str = " ".join(white_pieces_updated)
     black_pieces_updated_to_str = " ".join(black_pieces_updated)
-
-    # print("white_piece_update: ", white_pieces_updated_to_str)
-    # print("black_piece_update: ", black_pieces_updated_to_str)
-
-    # with open(filename, 'w') as board_temp:
-        
-    #     board_temp.write(str(new_board[0]))
-    #     board_temp.write('\n')
-
-    #     for line in white_pieces_updated_to_str:
-    #         board_temp.write(str(line))
-    #         board_temp.write('\n')
-            
-    #     for line in black_pieces_updated_to_str:
-    #         board_temp.write(str(line))
-    #         board_temp.write('\n')
-
 
     list_white_black_pieces_with_dimention = [str(new_board[0]), white_pieces_updated_to_str, black_pieces_updated_to_str]
     
@@ -636,82 +596,7 @@ def main() -> None:
     global piece
     # pieces = []
     piece = []
-    # try:
-    #     # global piece
-    #     # pieces = []
-    #     # piece = []
-    #     board_validation = False
-    #     # print("Testing")
-    #     while board_validation == False:
-    #         filename = input("File name for initial configuration: ")   
-    #         # filename="board_examp.txt"
-    #         file = open(filename)
-    #         global file_content
-    #         file_content = file.readlines()
-    #         if (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
-    #             board_validation = False
-    #             print("Dimentions are not correct")
-    #             continue
-
-            
-    #         # while (int(file_content[0]) <= 3 or int(file_content[0]) >= 26):
-    #         #     file_content[0] = int(input("Enter the number again"))
-            
-    #         white_pieces = file_content[1].split(",")
-
-    #         bool_pool = []
-    #         for white_piece in white_pieces:
-    #             # print(white_piece)
-    #             loc2index = location2index(white_piece)
-
-    #             piece_class = Piece(int(loc2index[0]), int(loc2index[1]), 1)
-    #             pieces.append([piece_class.pos_X, piece_class.pos_Y, piece_class.side_])
-
-    #             piece.append([loc2index, white_piece, "white"])
-
-    #             # if (alphabets_weights[white_piece.strip()[1]] > 0) and (alphabets_weights[white_piece.strip()[1]] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
-    #             if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(white_piece.strip()[2:]) <= int(file_content[0])):
-    #                 # pass
-    #                 # print("In White Piece")
-    #                 board_validation = True
-                    
-    #             else:
-    #                 print("The file is not valid: white")
-    #                 # board_validation = False
-    #                 bool_pool.append(False)
-    #                 break
-
-    #         black_pieces = file_content[2].split(",")
-
-    #         for black_piece in black_pieces:
-    #             # print(black_piece)
-
-    #             loc2index = location2index(black_piece)
-
-    #             piece_class = Piece(int(loc2index[0]), int(loc2index[1]), 0)
-    #             pieces.append([piece_class.pos_X, piece_class.pos_Y, piece_class.side_])
-
-    #             piece.append([loc2index, black_piece, "black"])
-
-    #             if (loc2index[0] > 0) and (loc2index[0] <= int(file_content[0])) and (int(black_piece.strip()[2:]) <= int(file_content[0])):
-    #                 # pass
-    #                 # print("In Black Piece")
-    #                 board_validation = True
-    #             else:
-    #                 # print("The file is not valid: black") 
-    #                 # board_validation = False
-    #                 bool_pool.append(False)
-    #                 break
-    #         if False in bool_pool:
-    #             board_validation = False
-    #         elif board_validation == True:
-    #             print("File is valid")
-
-    #         file.close()
-    #     # print("Ending")
-    # except FileNotFoundError:
-    #     print("The file does not exist.")
-     # Bo = (5, pieces)
+   
 
     filename = input("File name for initial configuration: ") 
     Bo = read_board(filename)
@@ -786,21 +671,6 @@ def main() -> None:
                                 list_to_append = [(coordinates[0], coordinates[1]), piece_at_[2]]
                                 general_moves[k[1].strip()] += [list_to_append]
 
-                    # print("bishop.can_reach: ",can_reach_)
-
-                    # if (piece_at_[0], piece_at_[1]) == coordinates:
-
-                        
-                    #     if can_reach_:
-
-                    #         list_to_append = [(coordinates[0], coordinates[1]), piece_at_[2]]
-                    #         general_moves[k[1].strip()] += [list_to_append]
-                    # else:
-
-                    #     if can_reach_:
-                    #         list_to_append = (coordinates[0], coordinates[1]), None
-                    #         general_moves[k[1].strip()] += [list_to_append]
-
                 if k[1].strip()[0] == 'K':
                     pass
                     is_piece_at_ = is_piece_at( k[0][0], k[0][1], Bo)
@@ -824,8 +694,8 @@ def main() -> None:
                                 general_moves[k[1].strip()] += [list_to_append]
 
 
-    print("general_moves: ", general_moves)
-    print('\n')
+    # print("general_moves: ", general_moves)
+    # print('\n')
 
     general_moves_keys = general_moves.keys()
 
@@ -841,8 +711,8 @@ def main() -> None:
         elif piece_coordinates_with_side[2] == 0:
             black_pieces.append(key) 
 
-    print("\nWhite pieces: ", white_pieces)
-    print("\nBlack pieces: ", black_pieces)
+    # print("\nWhite pieces: ", white_pieces)
+    # print("\nBlack pieces: ", black_pieces)
 
 
     # -------white and black pieces can reach-------
@@ -863,7 +733,7 @@ def main() -> None:
             white_pieces_can_reach.append(piece_value[0])
     global white_pieces_can_reach_unique
     white_pieces_can_reach_unique = list(set(white_pieces_can_reach))
-    print("white_pieces_can_reach_unique: ", white_pieces_can_reach_unique)
+    # print("white_pieces_can_reach_unique: ", white_pieces_can_reach_unique)
 
     black_pieces_can_reach = []
     for black_pieces_info in can_reach_black_pieces:
@@ -871,65 +741,8 @@ def main() -> None:
             black_pieces_can_reach.append(piece_value[0])
     global black_pieces_can_reach_unique
     black_pieces_can_reach_unique = list(set(black_pieces_can_reach))
-    print("black_pieces_can_reach_unique: ", black_pieces_can_reach_unique)
-
-    # -------------------------------------------  Excluded Coordinates for King is in_cheque  -------------------------------------------------
-
-    
-    # import numpy as np
-
-    # next_move = (2,3)
-
-    # global white_and_black_coordinates_excluded
-    # white_and_black_coordinates_excluded = []
-
-    # global in_check_excluded_coordinates
-    # in_check_excluded_coordinates = []
-    # same_side_excluded_coordinates = []
-    
-    # for key in general_moves_keys:
-
-        # if key[0] == 'K':
-        #     king_coordinates = location2index(key)
-
-        #     king_coordinates_with_side = piece_at(king_coordinates[0], king_coordinates[1], Bo)
-        #     # print(king_coordinates_with_side[2])
-
-        #     same_side_coordinates_excluded = []
-        #     coordinates_excluded = []
-
-        #     for list_of_coordinates in all_board_coordinates:
-        #         for coordinates in list_of_coordinates:
-        #             if is_piece_at(coordinates[0], coordinates[1], Bo) == True:
-        #                 pieces_side = piece_at(coordinates[0], coordinates[1], Bo)
-        #                 if pieces_side != None:
-        #                     if pieces_side[2] == king_coordinates_with_side[2]:
-        #                         same_side_coordinates_excluded.append((coordinates[0], coordinates[1]))
-        #                     else: 
-        #                         king_values = general_moves[key]
-        #                         for value in king_values:
-                                    
-        #                             piece_cord_with_side = piece_at(coordinates[0], coordinates[1], Bo)
-        #                             if piece_cord_with_side[2] != king_coordinates_with_side[2]:
-        #                                 piece_str = index2location(coordinates[0], coordinates[1])
-        #                                 piece_values = general_moves[piece_str]
-        #                                 if value in piece_values:
-        #                                     coordinates_excluded.append(value[0])
-
-            
-
-            # white_and_black_coordinates_excluded.append(coordinates_excluded)
-
-            # arr = np.concatenate((coordinates_excluded, same_side_coordinates_excluded))
-            # in_check_excluded_coordinates.append(arr)
-
-            # same_side_excluded_coordinates.append(same_side_coordinates_excluded)
-            # # in_check_excluded_coordinates.append(coordinates_excluded)
-                                            
-            # print("King: ", king_coordinates_with_side)
-            # print("Excluded Coordniates: ", list(set(coordinates_excluded)))
-            # print("Excluded Coordniates same side: ", same_side_coordinates_excluded)
-
+  
+  
    
     # ---------------------------------------------------  Board Configuration 2 Unicode  --------------------------------------------------------
 
@@ -993,7 +806,7 @@ def main() -> None:
             all_board_coordinates_to_unicode[col_index[index]][row_index[index]] = piece[0]
 
 
-    print("Board configuration 2 unicode")
+    # print("Board configuration 2 unicode")
 
     for row in all_board_coordinates_to_unicode:
         row_str = ""
@@ -1002,36 +815,88 @@ def main() -> None:
                 row_str += "\u2001"
             elif type(value) == str:
                 row_str += value
-        print(row_str)
+        # print(row_str)
 
     terminate = ""
     while True:
         global selected_piece
+        global move
         selected_piece = input("Select White Piece: ")
+        
         if selected_piece == "QUIT" or selected_piece == "quit":
             break
-        global move
-        move = input("Next move of White: ")
-        if move == "QUIT" or move == "quit":
-            break
-        print(move)
 
         selected_piece_cord = location2index(selected_piece)
-        selected_piece_cord_with_side = piece_at(selected_piece_cord[0], selected_piece_cord[1], Bo)   
+        selected_piece_cord_with_side = piece_at(selected_piece_cord[0], selected_piece_cord[1], Bo)
 
-        print("board: ", Bo)
+
         global is_check_piece
         is_check_piece = is_check(selected_piece_cord_with_side[2], Bo)
-        print("Checking Checkmate: ", is_checkmate(0, Bo))
+
+       
+
+        if  selected_piece.strip()[0] == 'B':
+            selected_piece_cords = location2index(selected_piece)
+            bishop_piece_at_ = piece_at(selected_piece_cords[0], selected_piece_cords[1], Bo)
+
+            bishop_selected_piece = Bishop(selected_piece_cords[0], selected_piece_cords[1], bishop_piece_at_[2])
+
+            can_reach_ = bishop_selected_piece.can_reach(coordinates[0], coordinates[1], Bo)
+            can_move_to_location = bishop_selected_piece.can_move_to(selected_piece_cord[0], selected_piece_cord[1], Bo)
+            # print("\ncan_move_to_location: ", can_move_to_location)
+
+            if len(general_moves[selected_piece]) > 0:    
+                while True:
+                    move = input("Next move of White: ")
+                    if move == "QUIT" or move == "quit":
+                        break
+                    move_cords = location2index(move)
+                    bishop_moved = bishop_selected_piece.move_to(move_cords[0], move_cords[1], Bo)
+
+                    is_check_piece_moved = is_check(selected_piece_cord_with_side[2], bishop_moved)
+                    if is_checkmate(0, bishop_moved) == True:
+                        print("Check Mate")
+                        break
+                    if is_check_piece == False:
+                        file_name_to_save = "board_examp_temp"
+                        save_board(file_name_to_save, Bo)
+                        break
+                    else:
+                        print("PLease enter the move again to avoid is_check")
         
 
+        if  selected_piece.strip()[0] == 'K':
+            selected_piece_cords = location2index(selected_piece)
+            king_piece_at_ = piece_at(selected_piece_cords[0], selected_piece_cords[1], Bo)
+
+            king_selected_piece = King(selected_piece_cords[0], selected_piece_cords[1], king_piece_at_[2])
+
+            can_reach_ = king_selected_piece.can_reach(coordinates[0], coordinates[1], Bo)
+            can_move_to_location = king_selected_piece.can_move_to(selected_piece_cord[0], selected_piece_cord[1], Bo)
+            if len(general_moves[selected_piece]) > 0:
+                print("king can move")
+                while True:
+                    move = input("Next move of White: ")
+                    if move == "QUIT" or move == "quit":
+                        break
+                    move_cords = location2index(move)
+                    king_moved = king_selected_piece.move_to(move_cords[0], move_cords[1], Bo)
+
+                    is_check_piece_moved = is_check(selected_piece_cord_with_side[2], king_moved)
+                    if is_checkmate(0, king_moved) == True:
+                        print("Check Mate")
+                        break
+                    if is_check_piece == False:
+                        file_name_to_save = "board_examp_temp"
+                        save_board(file_name_to_save, Bo)
+                        break
+                    else:
+                        print("PLease enter the move again to avoid is_check")
+  
 
         break
 
-    file_name_to_save = "board_examp_temp"
-
-    save_board(file_name_to_save, Bo)
-
+    
 
 
 
